@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToDo App</title>
+
+<style>
+body{
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.container{
+    background-color: white;
+    width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+ul li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: aliceblue;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+}
+
+input{
+    width: 70%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#add{
+    padding: 8px 10px;
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#add:hover{
+    background-color: darkgreen;
+}
+
+li button{
+    background: red;
+    padding: 7px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+li button:hover{
+    background: darkred;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>To Do App</h1>
+
+    <input type="text" id="input">
+    <button onclick="addTask()" id="add">Add</button>
+
+    <ul id="list"></ul>
+</div>
+
+<script>
+
+// ✅ Main array (IMPORTANT)
+let tasks = [];
+
+// ✅ Load data when page opens
+window.onload = function() {
+    let saved = localStorage.getItem("todos");
+
+    if (saved) {
+        tasks = JSON.parse(saved);
+        showTasks();
+    }
+};
+
+// ✅ Add Task
+function addTask() {
+    let input = document.getElementById("input");
+    let msg = input.value;
+
+    if (msg.trim() === "") {
+        input.style.border = "2px solid red";
+        alert("Please enter a task!");
+        return;
+    }
+
+    tasks.push(msg);
+
+    localStorage.setItem("todos", JSON.stringify(tasks));
+
+    showTasks();
+
+    input.value = "";
+}
+
+// ✅ Show Tasks
+function showTasks() {
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        let li = document.createElement("li");
+
+        li.innerHTML = `
+            ${task}
+            <button onclick="deleteTask(${index})">Delete</button>
+        `;
+
+        list.appendChild(li);
+    });
+}
+
+// ✅ Delete Task
+function deleteTask(index) {
+    tasks.splice(index, 1);
+
+    localStorage.setItem("todos", JSON.stringify(tasks));
+
+    showTasks();
+}
+
+</script>
+
+</body>
+</html>
